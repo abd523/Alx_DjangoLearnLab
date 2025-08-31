@@ -5,3 +5,8 @@ def homepage(request):
 
 def about(request):
     return HttpResponse("My about page.")
+
+
+from django.shortcuts import render
+def README(request):
+    return render(request, 'README.md')    
