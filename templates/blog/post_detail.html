@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ object.title }}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <h2>{{ object.title }}</h2>
+        <p>by {{ object.author.username }} on {{ object.published_date|date:"F d, Y" }}</p>
+        {% if user.is_authenticated and object.author == user %}
+            <div class="post-actions">
+                <a href="{% url 'post-update' object.id %}">Edit</a>
+                <a href="{% url 'post-delete' object.id %}">Delete</a>
+            </div>
+        {% endif %}
+        <p>{{ object.content }}</p>
+        <p class="post-tags">
+            Tags:
+            {% for tag in object.tags.all %}
+                <a href="{% url 'tagged-posts' tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            {% if not object.tags.all %}<span>No tags</span>{% endif %}
+        </p>
+    </article>
+
+    <hr>
+    <section class="comments">
+        <h3>Comments</h3>
+        {% for comment in object.comments.all %}
+            <div class="comment">
+                <p>
+                    <strong>{{ comment.author.username }}</strong>
+                    <small>({{ comment.created_at|date:"F d, Y P" }})</small>
+                    {% if user.is_authenticated and comment.author == user %}
+                        <a href="{% url 'comment-delete' comment.id %}">(Delete)</a>
+                    {% endif %}
+                </p>
+                <p>{{ comment.content }}</p>
+            </div>
+        {% empty %}
+            <p class="no-comments">No comments yet.</p>
+        {% endfor %}
+    </section>
+
+    {% if user.is_authenticated %}
+        <section class="comment-form">
+            <h4>Add a Comment</h4>
+            {% if comment_form.errors %}
+                <div class="form-errors">
+                    <p>Please correct the following errors:</p>
+                    <ul>
+                        {% for field in comment_form %}
+                            {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in comment_form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    {% else %}
+        <p>Please <a href="{% url 'login' %}?next={{ request.path|urlencode }}">login</a> to comment.</p>
+    {% endif %}
+
+    {% if tags %}
+        <section class="all-tags">
+            <h3>All Tags</h3>
+            <ul>
+                {% for tag in tags %}
+                    <li><a href="{% url 'tagged-posts' tag.slug %}">{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+{% endblock %}

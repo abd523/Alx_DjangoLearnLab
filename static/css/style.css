@@ -1,0 +1,23 @@
+/* static/css/style.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+nav a, nav span {
+    color: white;
+    margin-right: 15px;
+    text-decoration: none;
+}
+main {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
