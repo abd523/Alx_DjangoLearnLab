@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'blog',
     'users',
     'taggit',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -123,8 +124,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+import os
+
+# Base directory for the project
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Static files configuration
+STATIC_URL = '/static/'  # URL prefix for static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Additional directories for static files (e.g., project-level CSS/JS)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directory for collected static files (for production)
 
 
 
